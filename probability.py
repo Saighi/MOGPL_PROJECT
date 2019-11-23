@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 
 def q(d, k):
@@ -10,7 +11,7 @@ def q(d, k):
 
     sum_probability = 0
 
-    for i in range(2, 6):
+    for i in range(2, 6+1):
         sum_probability += q(d - 1, k - i) / 5
 
     return sum_probability
@@ -19,15 +20,16 @@ def q(d, k):
 def p(d, k):
     if k == 1:
         return 1 - (5 / 6) ** d
-    if (2 * d <= k <= 2 * d - 1) or k > 6 * d:
+    elif k < 2 * d or k > 6 * d:
         return 0
-    return ((5 / 6) ** d) * q(d, k)
+    else:
+        return ((5 / 6) ** d) * q(d, k)
 
 
 def p_table(D):
     table = np.zeros((D+1, 6 * D+1))
     for d in range(1, D+1):
-        for k in range(1, 6 * D):
+        for k in range(1, 6 * D+1):
             table[d, k] = p(d, k)
     np.savetxt('test.out', table, delimiter=',')
     return table
@@ -42,24 +44,70 @@ def max_esp(D):
 
     return max_d
 
-def egLouis(M,D):
+def egLouisinverse(M,D):
     d = max_esp(D)
-    k = 4 * d * (5 / 6) ** d + 1 - (5 / 6) ** d
-    pTable = p_table(D)[d-1]
+    pTable = np.sum(p_table(D),axis=0)/D
+    pTable = np.concatenate((pTable,np.zeros(M+1-pTable.shape[0])))
+    print(pTable)
 
+    egTab = np.zeros((M,M))
 
-    egTab = np.zeros((M+1,M+1))
+    for i in range(M-1,-1,-1):
+        for j in range(M-1,-1,-1):
+            if i == M-1:
+                pi = 1
+            else:
+                pi = egTab[i+1,j]-pTable[M-i-1]
+            egTab[i,j]=pi
 
-    for i in range(M,0,-1):
-        for j in range(M,0,-1):
-            if i==M:
-                egTab[i,j]=1
-            elif j == M:
-                egTab[i,j]=-1
-            else :
-                egTab[i,j] = egTab[i+1,j]-pTable[M-i]-egTab[i,j+1]+pTable[M-j]
+    for i in range(M-1,-1,-1):
+        for j in range(M-1,-1,-1):
+            if egTab[i,j] == 0:
+                if j == M-1:
+                    pj = -1
+                else:
+                    pj = egTab[i,j-1]+pTable[M-j-1]
+                egTab[i,j]=pj
 
     return egTab
+
+def egLouis(M,D):
+    d = max_esp(D)
+    pTable = np.sum(p_table(D),axis=0)/D
+    pTable = np.concatenate((pTable,np.zeros(M+1-pTable.shape[0])))
+    print(pTable)
+
+    egTab = np.zeros((M,M))
+
+    for i in range(M):
+        for j in range(M):
+            if i == 0:
+                pi = pTable[M]
+            else:
+                pi = egTab[i-1,j]+pTable[M-i]
+            egTab[i,j]=pi
+
+    for i in range(M):
+        for j in range(M):
+            if egTab[i,j] == 0:
+                if j == 0:
+                    pj = -pTable[M]
+                else:
+                    pj = egTab[i,j-1]-pTable[M-j]
+                egTab[i,j]=pj
+
+    return egTab
+
+import pandas as pd
+
+df = pd.DataFrame(egLouisinverse(20,2))
+f= open("eg.html","w")
+f.write(df.to_html())
+
+df = pd.DataFrame(egLouis(20,2))
+f= open("eg00.html","w")
+f.write(df.to_html())
+
 
 def egPaul(M,D):
     d = max_esp(D)
