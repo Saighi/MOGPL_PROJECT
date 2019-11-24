@@ -58,7 +58,7 @@ def egLouisinverse(M,D):
                 pi = 1
             else:
                 pi = egTab[i+1,j]-pTable[M-i-1]
-            egTab[i,j]=pi
+            egTab[i,j]=pi if pi >0.01 else 0
 
     for i in range(M-1,-1,-1):
         for j in range(M-1,-1,-1):
@@ -66,8 +66,8 @@ def egLouisinverse(M,D):
                 if j == M-1:
                     pj = -1
                 else:
-                    pj = egTab[i,j-1]+pTable[M-j-1]
-                egTab[i,j]=pj
+                    pj = egTab[i,j+1]+pTable[M-j-1]
+                egTab[i,j]=pj if pj <-0.01 else 0
 
     return egTab
 
@@ -99,7 +99,7 @@ def egLouis(M,D):
     return egTab
 
 import pandas as pd
-
+"""
 df = pd.DataFrame(egLouisinverse(20,2))
 f= open("eg.html","w")
 f.write(df.to_html())
@@ -107,7 +107,7 @@ f.write(df.to_html())
 df = pd.DataFrame(egLouis(20,2))
 f= open("eg00.html","w")
 f.write(df.to_html())
-
+"""
 
 def egPaul(M,D):
     d = max_esp(D)
@@ -138,4 +138,4 @@ def egPaul(M,D):
 
 
 
-EG_table=egPaul(100,10)
+#EG_table=egPaul(100,10)
