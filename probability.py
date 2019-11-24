@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 
 
 def q(d, k):
@@ -98,7 +97,7 @@ def egLouis(M,D):
 
     return egTab
 
-import pandas as pd
+
 """
 df = pd.DataFrame(egLouisinverse(20,2))
 f= open("eg.html","w")
@@ -109,33 +108,21 @@ f= open("eg00.html","w")
 f.write(df.to_html())
 """
 
-def egPaul(M,D):
+
+def egPaul(M, D):
     d = max_esp(D)
-    k = 4 * d * (5 / 6) ** d + 1 - (5 / 6) ** d
-    p_Table = p_table(D)[d]
-
     # initialisation
-    EG_table= np.zeros((M+1, M+1))
-    EG_table[:,M]= np.full(M+1,1)
+    EG_table = np.zeros((M + 1, M + 1))
+    EG_table[:, M] = np.full(M + 1, 1)
+    EG_table[:, M - 1] = np.full(M + 1, 1)
     EG_table[M, :] = np.full(M + 1, -1)
-    EG_table[M, M]=0
+    EG_table[M, M] = 0
 
-    for i in range(M-1,-1,-1):
+    for i in range(M - 2, -1, -1):
         for j in range(M - 1, -1, -1):
-            if M-i<len(p_Table):
-                proba_k=np.sum(p_Table[M-i:])
-            else:
-                proba_k=0
-
-            EG_table[j, i] = proba_k-(proba_k*(1-proba_k))+EG_table[j, i+1]+EG_table[j+1, i]
-            if EG_table[j, i]>1:
-                EG_table[j, i]=1
-            if EG_table[j, i] < -1:
-                EG_table[j, i] = -1
-
+            EG_table[j, i] = EG_table[j, i + 1] - p(d, 1) + (p(d, 1) * EG_table[j + 1, i] + (p(d, 1) ** 2))
 
     return EG_table
 
 
-
-#EG_table=egPaul(100,10)
+EG_table = egPaul(10, 1)
