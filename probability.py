@@ -109,10 +109,12 @@ df = pd.DataFrame(egLouis(20,2))
 f= open("eg00.html","w")
 f.write(df.to_html())
 """
+def esp(a):
+    return 4 * a * (5 / 6) ** a + 1 - (5 / 6) ** a
 
 D = 6
 M = 100
-Eg_table = np.full((M + 1, M + 1), None)
+Eg_table = np.full((M , M ), 1000.)
 
 def egPaul(i, j, j1):
 
@@ -121,27 +123,32 @@ def egPaul(i, j, j1):
     global Eg_table
 
     if i >= M:
-        Eg_table[M, j] = 1
         return 1
     if j >= M:
-        Eg_table[i, M] = -1
         return -1
 
-    d = max_esp(D)
-    probas = p_table(D)[d]
     Egij = 0
 
     if j1:
+
+        d = np.argmin([abs(esp(a)-(M-i)) for a in range(1, D)])
+        probas = p_table(D)[d+1]
+
         for x in range(1, len(probas)):
 
-            if (i + x <= M) and Eg_table[i + x, j] is not None:
+            if (i + x < M) and Eg_table[i + x, j] != 1000.:
                 Egij += probas[x] * Eg_table[i + x, j]
             else:
                 Egij += probas[x] * egPaul(i + x, j, False)
     else:
+
+        d = np.argmin([abs(esp(a) - (M - j)) for a in range(1, D)])
+
+        probas = p_table(D)[d+1]
+
         for x in range(1, len(probas)):
 
-            if (j + x <= M) and Eg_table[i, j + x] is not None:
+            if (j + x < M) and Eg_table[i, j + x] != 1000.:
                 Egij += probas[x] * Eg_table[i, j + x]
             else:
                 Egij += probas[x] * egPaul(i, j + x, True)
@@ -151,7 +158,3 @@ def egPaul(i, j, j1):
 
 
 EG = egPaul(0, 0, True)
-
-
-d = max_esp(D)
-probas = sum(p_table(D)[d])
