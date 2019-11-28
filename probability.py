@@ -112,11 +112,15 @@ f.write(df.to_html())
 def esp(a):
     return 4 * a * (5 / 6) ** a + 1 - (5 / 6) ** a
 
-D = 6
+
+D = 10
+proba_table = p_table(D)[1:, :]
 M = 100
 Eg_table = np.full((M , M ), 1000.)
+Eg_table_which_play = np.full((M, M), 1000.)
 
 def egPaul(i, j, j1):
+
 
     global D
     global M
@@ -127,34 +131,38 @@ def egPaul(i, j, j1):
     if j >= M:
         return -1
 
-    Egij = 0
+    Eij_potentiels = np.zeros(len(proba_table))
 
     if j1:
 
-        d = np.argmin([abs(esp(a)-(M-i)) for a in range(1, D)])
-        probas = p_table(D)[d+1]
+        for k in range(len(proba_table)):
 
-        for x in range(1, len(probas)):
+            for x in range(1, len(proba_table[k])):
 
-            if (i + x < M) and Eg_table[i + x, j] != 1000.:
-                Egij += probas[x] * Eg_table[i + x, j]
-            else:
-                Egij += probas[x] * egPaul(i + x, j, False)
+                if proba_table[k][x] != 0.:
+
+                    if (i + x < M) and Eg_table[i + x, j] != 1000.:
+                        Eij_potentiels[k] += proba_table[k][x] * Eg_table[i + x, j]
+                    else:
+                        Eij_potentiels[k] += proba_table[k][x] * egPaul(i + x, j, False)
     else:
 
-        d = np.argmin([abs(esp(a) - (M - j)) for a in range(1, D)])
+        for k in range(len(proba_table)):
 
-        probas = p_table(D)[d+1]
+            for x in range(1, len(proba_table[k])):
 
-        for x in range(1, len(probas)):
+                if proba_table[k][x] != 0.:
 
-            if (j + x < M) and Eg_table[i, j + x] != 1000.:
-                Egij += probas[x] * Eg_table[i, j + x]
-            else:
-                Egij += probas[x] * egPaul(i, j + x, True)
+                    if (j + x < M) and Eg_table[i, j + x] != 1000.:
+                        Eij_potentiels[k] += proba_table[k][x] * Eg_table[i, j + x]
+                    else:
+                        Eij_potentiels[k] += proba_table[k][x] * egPaul(i, j + x, True)
+
+    Egij = np.amax(Eij_potentiels)
+
+    Eg_table_which_play[i, j] = np.argmax(Eij_potentiels) + 1
 
     Eg_table[i, j] = Egij
     return Egij
-
 
 EG = egPaul(0, 0, True)
