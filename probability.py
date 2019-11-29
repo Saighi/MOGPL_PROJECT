@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 def q(d, k):
@@ -42,73 +43,12 @@ def max_esp(D):
             val_max_d = 4 * d * (5 / 6) ** d + 1 - (5 / 6) ** d
 
     return max_d
-
-
-def egLouisinverse(M, D):
-    d = max_esp(D)
-    pTable = np.sum(p_table(D), axis=0) / D
-    pTable = np.concatenate((pTable, np.zeros(M + 1 - pTable.shape[0])))
-    print(pTable)
-
-    egTab = np.zeros((M, M))
-
-    for i in range(M - 1, -1, -1):
-        for j in range(M - 1, -1, -1):
-            if i == M - 1:
-                pi = 1
-            else:
-                pi = egTab[i + 1, j] - pTable[M - i - 1]
-            egTab[i, j] = pi if pi > 0.01 else 0
-
-    for i in range(M - 1, -1, -1):
-        for j in range(M - 1, -1, -1):
-            if egTab[i, j] == 0:
-                if j == M - 1:
-                    pj = -1
-                else:
-                    pj = egTab[i, j + 1] + pTable[M - j - 1]
-                egTab[i, j] = pj if pj < -0.01 else 0
-
-    return egTab
-
-
-def egLouis(M, D):
-    d = max_esp(D)
-    pTable = np.sum(p_table(D), axis=0) / D
-    pTable = np.concatenate((pTable, np.zeros(M + 1 - pTable.shape[0])))
-    print(pTable)
-
-    egTab = np.zeros((M, M))
-
-    for i in range(M):
-        for j in range(M):
-            if i == 0:
-                pi = pTable[M]
-            else:
-                pi = egTab[i - 1, j] + pTable[M - i]
-            egTab[i, j] = pi
-
-    for i in range(M):
-        for j in range(M):
-            if egTab[i, j] == 0:
-                if j == 0:
-                    pj = -pTable[M]
-                else:
-                    pj = egTab[i, j - 1] - pTable[M - j]
-                egTab[i, j] = pj
-
-    return egTab
-
-
 """
-df = pd.DataFrame(egLouisinverse(20,2))
+df = pd.DataFrame(p_table(3))
 f= open("eg.html","w")
 f.write(df.to_html())
-
-df = pd.DataFrame(egLouis(20,2))
-f= open("eg00.html","w")
-f.write(df.to_html())
 """
+
 def esp(a):
     return 4 * a * (5 / 6) ** a + 1 - (5 / 6) ** a
 
@@ -165,4 +105,38 @@ def egPaul(i, j, j1):
     Eg_table[i, j] = Egij
     return Egij
 
-EG = egPaul(0, 0, True)
+
+#EG = egPaul(0, 0, True)
+
+#Partie simultanée
+
+def EGsimu(d1,d2):
+
+    p = 0
+    truc = 0
+
+    ptable = p_table(max(d1,d2))
+
+    for i1 in range(1,ptable.shape[1]):
+        for i2 in range(1,ptable.shape[1]):
+            truc+=(ptable[d2,i2]/(max(d1,d2)*6))
+            if i2 < i1 and d1 != 0:
+                p+=(ptable[d1,i1]/(max(d1,d2)*6))
+            elif i2 > i1 and d2 != 0:
+                p-=(ptable[d2,i2]/(max(d1,d2)*6))
+
+    print(truc)
+
+    return p if abs(p) > 0.01 else 0
+
+def EGmat(D):
+
+    mat = np.zeros((D+1,D+1))
+
+    for d1 in range(D+1):
+        for d2 in range(D+1):
+            mat[d1,d2]=EGsimu(d1,d2)
+
+    return mat
+
+print(EGmat(3))
