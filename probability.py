@@ -118,6 +118,7 @@ proba_table = p_table(D)[1:, :]
 M = 100
 Eg_table = np.full((M , M ), 1000.)
 Eg_table_which_play = np.full((M, M), 1000.)
+Eg_table_which_play_j2 = np.full((M, M), 1000.)
 
 def egPaul(i, j, j1):
 
@@ -145,6 +146,9 @@ def egPaul(i, j, j1):
                         Eij_potentiels[k] += proba_table[k][x] * Eg_table[i + x, j]
                     else:
                         Eij_potentiels[k] += proba_table[k][x] * egPaul(i + x, j, False)
+
+        Egij = np.amax(Eij_potentiels)
+        des = np.argmax(Eij_potentiels) + 1
     else:
 
         for k in range(len(proba_table)):
@@ -157,12 +161,18 @@ def egPaul(i, j, j1):
                         Eij_potentiels[k] += proba_table[k][x] * Eg_table[i, j + x]
                     else:
                         Eij_potentiels[k] += proba_table[k][x] * egPaul(i, j + x, True)
+        Egij = np.amin(Eij_potentiels)
+        des = np.argmin(Eij_potentiels) + 1
 
-    Egij = np.amax(Eij_potentiels)
+    if Eg_table_which_play[i, j] == 1000.:
+        if j1:
+            Eg_table_which_play[i, j] = des
+        else:
+            Eg_table_which_play_j2[i, j] = des
 
-    Eg_table_which_play[i, j] = np.argmax(Eij_potentiels) + 1
+    if Eg_table[i, j] == 1000.:
+        Eg_table[i, j] = Egij
 
-    Eg_table[i, j] = Egij
     return Egij
 
 EG = egPaul(0, 0, True)
