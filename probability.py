@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 
 def q(d, k):
@@ -43,11 +42,14 @@ def max_esp(D):
             val_max_d = 4 * d * (5 / 6) ** d + 1 - (5 / 6) ** d
 
     return max_d
+
+
 """
 df = pd.DataFrame(p_table(3))
 f= open("eg.html","w")
 f.write(df.to_html())
 """
+
 
 def esp(a):
     return 4 * a * (5 / 6) ** a + 1 - (5 / 6) ** a
@@ -56,13 +58,12 @@ def esp(a):
 D = 10
 proba_table = p_table(D)[1:, :]
 M = 100
-Eg_table = np.full((M , M ), 1000.)
+Eg_table = np.full((M, M), 1000.)
 Eg_table_which_play = np.full((M, M), 1000.)
 Eg_table_which_play_j2 = np.full((M, M), 1000.)
 
+
 def egPaul(i, j, j1):
-
-
     global D
     global M
     global Eg_table
@@ -101,6 +102,7 @@ def egPaul(i, j, j1):
                         Eij_potentiels[k] += proba_table[k][x] * Eg_table[i, j + x]
                     else:
                         Eij_potentiels[k] += proba_table[k][x] * egPaul(i, j + x, True)
+
         Egij = np.amin(Eij_potentiels)
         des = np.argmin(Eij_potentiels) + 1
 
@@ -116,37 +118,37 @@ def egPaul(i, j, j1):
     return Egij
 
 
-#EG = egPaul(0, 0, True)
+EG = egPaul(96, 96, True)
 
-#Partie simultanée
 
-def EGsimu(d1,d2):
+# Partie simultanée
 
+def EGsimu(d1, d2):
     p = 0
     truc = 0
 
-    ptable = p_table(max(d1,d2))
+    ptable = p_table(max(d1, d2))
 
-    for i1 in range(1,ptable.shape[1]):
-        for i2 in range(1,ptable.shape[1]):
-            truc+=(ptable[d2,i2]/(max(d1,d2)*6))
+    for i1 in range(1, ptable.shape[1]):
+        for i2 in range(1, ptable.shape[1]):
+            truc += (ptable[d2, i2] / (max(d1, d2) * 6))
             if i2 < i1 and d1 != 0:
-                p+=(ptable[d1,i1]/(max(d1,d2)*6))
+                p += (ptable[d1, i1] / (max(d1, d2) * 6))
             elif i2 > i1 and d2 != 0:
-                p-=(ptable[d2,i2]/(max(d1,d2)*6))
+                p -= (ptable[d2, i2] / (max(d1, d2) * 6))
 
     print(truc)
 
     return p if abs(p) > 0.01 else 0
 
+
 def EGmat(D):
+    mat = np.zeros((D + 1, D + 1))
 
-    mat = np.zeros((D+1,D+1))
-
-    for d1 in range(D+1):
-        for d2 in range(D+1):
-            mat[d1,d2]=EGsimu(d1,d2)
+    for d1 in range(D + 1):
+        for d2 in range(D + 1):
+            mat[d1, d2] = EGsimu(d1, d2)
 
     return mat
 
-print(EGmat(3))
+# print(EGmat(3))
