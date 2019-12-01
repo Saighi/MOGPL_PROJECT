@@ -39,12 +39,60 @@ def dice(d):
         return np.sum(r)
 
 
-def mainloopSeq(player1, player2, M, D, affichage=True):
+# Permet de ne pas recalculer les tables quand on joue un grand nombre de parties avec les mêmes paramètres.
+def metaloopSeq(nb_parties, player1, player2, M, D):
+    Eg_table_which_play_p1, Eg_table_which_play_p2 = None, None
+
+    if player1 == choose_optimale or player2 == choose_optimale:
+        _, _, _, Eg_table_which_play_p1, Eg_table_which_play_p2 = pb.eg(D, M, 0, 0, True)
+
+    wins = 0
+    looses = 0
+    for i in range(nb_parties):
+        if main_for_meta_loopSeq(player1, player2, M, D, Eg_table_which_play_p1,
+                                 Eg_table_which_play_p2) == 1:
+            wins += 1
+        else:
+            looses += 1
+
+    return wins, looses
+
+
+def main_for_meta_loopSeq(player1, player2, M, D, Eg_table_which_play_p1,
+                          Eg_table_which_play_p2):
     p1 = 0
     p2 = 0
     n = 0
-    Eg_table_which_play_p1 = None
-    Eg_table_which_play_p2 = None
+
+    # Utile pour le calcul de l'espérence de gain du joueur 1
+    while p1 < M and p2 < M:
+
+        n += 1
+
+        if player1 == choose_optimale:
+            p1 += dice(player1(Eg_table_which_play_p1, p1, p2))
+        else:
+            p1 += dice(player1(D))
+
+        if p1 >= M:
+            return 1
+
+        if player2 == choose_optimale:
+            p2 += dice(player2(Eg_table_which_play_p2, p1, p2))
+        else:
+            p2 += dice(player2(D))
+
+        if p2 >= M:
+            return -1
+
+
+def mainloopSeq(player1, player2, M, D):
+    p1 = 0
+    p2 = 0
+    n = 0
+
+    if player1 == choose_optimale or player2 == choose_optimale:
+        _, _, _, Eg_table_which_play_p1, Eg_table_which_play_p2 = pb.eg(D, M, 0, 0, True)
 
     if player1 == chooseStrat:
         player1 = chooseStrat()
@@ -52,48 +100,22 @@ def mainloopSeq(player1, player2, M, D, affichage=True):
     if player2 == chooseStrat:
         player2 = chooseStrat()
 
-    if player1 == choose_optimale:
-        _, _, _, Eg_table_which_play_p1 = pb.eg(D, M, 0, 0, True)
+    while p1 < M and p2 < M:
 
-    if player2 == choose_optimale:
-        _, _, _, Eg_table_which_play_p2 = pb.eg(D, M, 0, 0, False)
+        n += 1
+        print("turn : " + str(n))
+        p1 += dice(player1(D))
+        print("p1 : " + str(p1))
+        if p1 >= M:
+            print("player 1 won")
+            break
+        p2 += dice(player2(D))
+        print("p2 : " + str(p2))
+        if p2 >= M:
+            print("player 2 won")
+            break
 
-    if affichage:
-        while p1 < M and p2 < M:
 
-            n += 1
-            print("turn : " + str(n))
-            p1 += dice(player1(D))
-            print("p1 : " + str(p1))
-            if p1 >= M:
-                print("player 1 won")
-                break
-            p2 += dice(player2(D))
-            print("p2 : " + str(p2))
-            if p2 >= M:
-                print("player 2 won")
-                break
-    else:
-        # Utile pour le calcul de l'espérence de gain du joueur 1
-        while p1 < M and p2 < M:
-
-            n += 1
-
-            if player1 == choose_optimale:
-                p1 += dice(player1(Eg_table_which_play_p1, p1, p2))
-            else:
-                p1 += dice(player1(D))
-
-            if p1 >= M:
-                return 1
-
-            if player2 == choose_optimale:
-                p2 += dice(player2(Eg_table_which_play_p2, p2, p1))
-            else:
-                p2 += dice(player2(D))
-
-            if p2 >= M:
-                return -1
 
 
 def start_game(M, D, simultane=False):

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def q(d, k):
     if k < 2 * d or k > 6 * d:
         return 0
@@ -53,12 +54,13 @@ f.write(df.to_html())
 def esp(a):
     return 4 * a * (5 / 6) ** a + 1 - (5 / 6) ** a
 
+
 def eg(D, M, i, j, j1):
     proba_table = p_table(D)[1:, :]
     Eg_table_j1 = np.full((M, M), 1000.)
     Eg_table_j2 = np.full((M, M), 1000.)
-    Eg_table_which_play = np.full((M, M), 1000.)
-
+    Eg_table_which_play_j1 = np.full((M, M), 1000.)
+    Eg_table_which_play_j2 = np.full((M, M), 1000.)
 
     def egPaul(i, j, j1):
 
@@ -98,9 +100,11 @@ def eg(D, M, i, j, j1):
             Egij = np.amin(Eij_potentiels)
             des = np.argmin(Eij_potentiels) + 1
 
-        if Eg_table_which_play[i, j] == 1000.:
-            Eg_table_which_play[i, j] = des
+        if Eg_table_which_play_j1[i, j] == 1000. and j1:
+            Eg_table_which_play_j1[i, j] = des
 
+        if Eg_table_which_play_j2[i, j] == 1000. and not j1:
+            Eg_table_which_play_j2[i, j] = des
 
         if Eg_table_j1[i, j] == 1000. and j1:
             Eg_table_j1[i, j] = Egij
@@ -109,10 +113,11 @@ def eg(D, M, i, j, j1):
 
         return Egij
 
-    return egPaul(i, j, j1), Eg_table_j1, Eg_table_j2, Eg_table_which_play
+    return egPaul(i, j, j1), Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2
 
 
-Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play = eg(10, 100, 0, 0, True)
+Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2 = eg(2, 10, 0, 0, True)
+
 
 # Partie simultanée
 
