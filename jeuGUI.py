@@ -1,13 +1,15 @@
-import numpy as np
-import probability as pb
-import PySimpleGUI as sg
 import sys
 
+import PySimpleGUI as sg
+import numpy as np
+
+import probability as pb
+
+
 def chooseStrat():
+    strat = {"aveugle": pb.max_esp}
 
-    strat = {"aveugle":pb.max_esp}
-
-    sg.change_look_and_feel('DarkAmber')	# Add a touch of color
+    sg.change_look_and_feel('DarkAmber')  # Add a touch of color
     # All the stuff inside your window.
     layout = [  [sg.Text('What strat do you want ?')],
                 [sg.Text('strat : '), sg.Listbox(values=list(strat.keys()),
@@ -48,8 +50,7 @@ def humainStrat(D):
     return values["d"][0]
 
 def dice(d):
-
-    r = np.random.randint(6,size=(d,))
+    r = np.random.randint(1, 7, size=(d,))
 
     if 1 in r:
         return 1
@@ -58,11 +59,6 @@ def dice(d):
 
 def mainloopSeq(player1,player2,M,D):
 
-    if player1 == chooseStrat:
-        player1 = chooseStrat()
-
-    if player2 == chooseStrat:
-        player2 = chooseStrat()
 
     p1=0
     p2=0

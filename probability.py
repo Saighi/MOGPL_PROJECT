@@ -58,7 +58,7 @@ def eg(D, M, i, j, j1):
     Eg_table_j1 = np.full((M, M), 1000.)
     Eg_table_j2 = np.full((M, M), 1000.)
     Eg_table_which_play = np.full((M, M), 1000.)
-    Eg_table_which_play_j2 = np.full((M, M), 1000.)
+
 
     def egPaul(i, j, j1):
 
@@ -74,12 +74,9 @@ def eg(D, M, i, j, j1):
             for k in range(len(proba_table)):
 
                 for x in range(1, len(proba_table[k])):
-
                     if proba_table[k][x] != 0.:
 
-                        if (i + x < M) and Eg_table_j1[i + x, j] != 1000.:
-                            Eij_potentiels[k] += proba_table[k][x] * Eg_table_j1[i + x, j]
-                        elif (i + x < M) and Eg_table_j2[i + x, j] != 1000.:
+                        if (i + x < M) and Eg_table_j2[i + x, j] != 1000.:
                             Eij_potentiels[k] += proba_table[k][x] * Eg_table_j2[i + x, j]
                         else:
                             Eij_potentiels[k] += proba_table[k][x] * egPaul(i + x, j, False)
@@ -96,18 +93,14 @@ def eg(D, M, i, j, j1):
 
                         if (j + x < M) and Eg_table_j1[i, j + x] != 1000.:
                             Eij_potentiels[k] += proba_table[k][x] * Eg_table_j1[i, j + x]
-                        elif (j + x < M) and Eg_table_j2[i, j + x] != 1000.:
-                            Eij_potentiels[k] += proba_table[k][x] * Eg_table_j2[i, j + x]
                         else:
                             Eij_potentiels[k] += proba_table[k][x] * egPaul(i, j + x, True)
-
             Egij = np.amin(Eij_potentiels)
             des = np.argmin(Eij_potentiels) + 1
 
-        if Eg_table_which_play[i, j] == 1000. and j1:
+        if Eg_table_which_play[i, j] == 1000.:
             Eg_table_which_play[i, j] = des
-        elif Eg_table_which_play_j2[i, j] == 1000. and not j1:
-            Eg_table_which_play_j2[i, j] = des
+
 
         if Eg_table_j1[i, j] == 1000. and j1:
             Eg_table_j1[i, j] = Egij
@@ -116,13 +109,10 @@ def eg(D, M, i, j, j1):
 
         return Egij
 
-    Eij = egPaul(i, j, j1)
-
-    return Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play, Eg_table_which_play_j2
+    return egPaul(i, j, j1), Eg_table_j1, Eg_table_j2, Eg_table_which_play
 
 
-# Eij,Eg_table_j1,Eg_table_j2,Eg_table_which_play,Eg_table_which_play_j2 = eg(0, 0, True)
-
+Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play = eg(10, 100, 0, 0, True)
 
 # Partie simultanée
 

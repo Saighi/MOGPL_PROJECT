@@ -1,3 +1,17 @@
-import probability as pb
+from jeu import *
 
-Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play, Eg_table_which_play_j2 = pb.eg(2, 10, 0, 0, True)
+D = 2
+M = 10
+
+strat = {"aveugle": pb.max_esp, "optimale": choose_optimale}
+player1 = strat["optimale"]
+player2 = strat["optimale"]
+
+echantillon = 10000
+resultats = 0
+
+for i in range(echantillon):
+    resultats += mainloopSeq(player1, player2, M, D, affichage=False)
+
+esperence_ = resultats / echantillon
+print(esperence_)
