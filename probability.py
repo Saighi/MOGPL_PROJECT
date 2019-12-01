@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def q(d, k):
     if k < 2 * d or k > 6 * d:
         return 0
@@ -54,71 +53,75 @@ f.write(df.to_html())
 def esp(a):
     return 4 * a * (5 / 6) ** a + 1 - (5 / 6) ** a
 
+def eg(D, M, i, j, j1):
+    proba_table = p_table(D)[1:, :]
+    Eg_table_j1 = np.full((M, M), 1000.)
+    Eg_table_j2 = np.full((M, M), 1000.)
+    Eg_table_which_play = np.full((M, M), 1000.)
+    Eg_table_which_play_j2 = np.full((M, M), 1000.)
 
-D = 10
-proba_table = p_table(D)[1:, :]
-M = 100
-Eg_table = np.full((M, M), 1000.)
-Eg_table_which_play = np.full((M, M), 1000.)
-Eg_table_which_play_j2 = np.full((M, M), 1000.)
+    def egPaul(i, j, j1):
 
+        if i >= M:
+            return 1
+        if j >= M:
+            return -1
 
-def egPaul(i, j, j1):
-    global D
-    global M
-    global Eg_table
+        Eij_potentiels = np.zeros(len(proba_table))
 
-    if i >= M:
-        return 1
-    if j >= M:
-        return -1
-
-    Eij_potentiels = np.zeros(len(proba_table))
-
-    if j1:
-
-        for k in range(len(proba_table)):
-
-            for x in range(1, len(proba_table[k])):
-
-                if proba_table[k][x] != 0.:
-
-                    if (i + x < M) and Eg_table[i + x, j] != 1000.:
-                        Eij_potentiels[k] += proba_table[k][x] * Eg_table[i + x, j]
-                    else:
-                        Eij_potentiels[k] += proba_table[k][x] * egPaul(i + x, j, False)
-
-        Egij = np.amax(Eij_potentiels)
-        des = np.argmax(Eij_potentiels) + 1
-    else:
-
-        for k in range(len(proba_table)):
-
-            for x in range(1, len(proba_table[k])):
-
-                if proba_table[k][x] != 0.:
-
-                    if (j + x < M) and Eg_table[i, j + x] != 1000.:
-                        Eij_potentiels[k] += proba_table[k][x] * Eg_table[i, j + x]
-                    else:
-                        Eij_potentiels[k] += proba_table[k][x] * egPaul(i, j + x, True)
-
-        Egij = np.amin(Eij_potentiels)
-        des = np.argmin(Eij_potentiels) + 1
-
-    if Eg_table_which_play[i, j] == 1000.:
         if j1:
-            Eg_table_which_play[i, j] = des
+
+            for k in range(len(proba_table)):
+
+                for x in range(1, len(proba_table[k])):
+
+                    if proba_table[k][x] != 0.:
+
+                        if (i + x < M) and Eg_table_j1[i + x, j] != 1000.:
+                            Eij_potentiels[k] += proba_table[k][x] * Eg_table_j1[i + x, j]
+                        elif (i + x < M) and Eg_table_j2[i + x, j] != 1000.:
+                            Eij_potentiels[k] += proba_table[k][x] * Eg_table_j2[i + x, j]
+                        else:
+                            Eij_potentiels[k] += proba_table[k][x] * egPaul(i + x, j, False)
+
+            Egij = np.amax(Eij_potentiels)
+            des = np.argmax(Eij_potentiels) + 1
         else:
+
+            for k in range(len(proba_table)):
+
+                for x in range(1, len(proba_table[k])):
+
+                    if proba_table[k][x] != 0.:
+
+                        if (j + x < M) and Eg_table_j1[i, j + x] != 1000.:
+                            Eij_potentiels[k] += proba_table[k][x] * Eg_table_j1[i, j + x]
+                        elif (j + x < M) and Eg_table_j2[i, j + x] != 1000.:
+                            Eij_potentiels[k] += proba_table[k][x] * Eg_table_j2[i, j + x]
+                        else:
+                            Eij_potentiels[k] += proba_table[k][x] * egPaul(i, j + x, True)
+
+            Egij = np.amin(Eij_potentiels)
+            des = np.argmin(Eij_potentiels) + 1
+
+        if Eg_table_which_play[i, j] == 1000. and j1:
+            Eg_table_which_play[i, j] = des
+        elif Eg_table_which_play_j2[i, j] == 1000. and not j1:
             Eg_table_which_play_j2[i, j] = des
 
-    if Eg_table[i, j] == 1000.:
-        Eg_table[i, j] = Egij
+        if Eg_table_j1[i, j] == 1000. and j1:
+            Eg_table_j1[i, j] = Egij
+        elif Eg_table_j2[i, j] == 1000. and not j1:
+            Eg_table_j2[i, j] = Egij
 
-    return Egij
+        return Egij
+
+    Eij = egPaul(i, j, j1)
+
+    return Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play, Eg_table_which_play_j2
 
 
-EG = egPaul(96, 96, True)
+# Eij,Eg_table_j1,Eg_table_j2,Eg_table_which_play,Eg_table_which_play_j2 = eg(0, 0, True)
 
 
 # Partie simultanée
