@@ -1,3 +1,5 @@
+import os.path
+
 import numpy as np
 
 import probability as pb
@@ -20,6 +22,9 @@ def choose_optimale(Eg_table_which_play, i, j):
     return int(Eg_table_which_play[i, j])
 
 
+def choose_aleatoire(D):
+    return np.random.randint(1, D + 1)
+
 def humainStrat(D):
     i = int(input("pick between 1 and " + str(D) + " dices "))
 
@@ -31,7 +36,7 @@ def humainStrat(D):
 
 
 def dice(d):
-    r = np.random.randint(6, size=(d,))
+    r = np.random.randint(1, 7, size=(d,))
 
     if 1 in r:
         return 1
@@ -44,7 +49,15 @@ def metaloopSeq(nb_parties, player1, player2, M, D):
     Eg_table_which_play_p1, Eg_table_which_play_p2 = None, None
 
     if player1 == choose_optimale or player2 == choose_optimale:
-        _, _, _, Eg_table_which_play_p1, Eg_table_which_play_p2 = pb.eg(D, M, 0, 0, True)
+
+        if os.path.isfile("tables_tpt/which_play_p1_" + str(D) + "_" + str(M) + ".npy") and os.path.isfile(
+                "tables_tpt/which_play_p2_" + str(D) + "_" + str(M) + ".npy"):
+            Eg_table_which_play_p1 = np.load("tables_tpt/which_play_p1_" + str(D) + "_" + str(M) + ".npy")
+            Eg_table_which_play_p2 = np.load("tables_tpt/which_play_p2_" + str(D) + "_" + str(M) + ".npy")
+        else:
+            _, _, _, Eg_table_which_play_p1, Eg_table_which_play_p2 = pb.eg(D, M, 0, 0, True)
+            np.save("tables_tpt/which_play_p1_" + str(D) + "_" + str(M), Eg_table_which_play_p1)
+            np.save("tables_tpt/which_play_p2_" + str(D) + "_" + str(M), Eg_table_which_play_p2)
 
     wins = 0
     looses = 0
@@ -114,8 +127,6 @@ def mainloopSeq(player1, player2, M, D):
         if p2 >= M:
             print("player 2 won")
             break
-
-
 
 
 def start_game(M, D, simultane=False):
