@@ -3,19 +3,15 @@ import pandas as pd
 
 def EGsimuL(d1, d2):
     p = 0
-    truc = 0
 
-    ptable = p_table(max(d1, d2))
+    ptable = p_table(max(d1,d2))
 
-    for i1 in range(1, ptable.shape[1]):
-        for i2 in range(1, ptable.shape[1]):
-            truc += (ptable[d2, i2] / (max(d1, d2) * 6))
-            if i2 < i1 and d1 != 0:
-                p += (ptable[d1, i1] / (max(d1, d2) * 6))
-            elif i2 > i1 and d2 != 0:
-                p -= (ptable[d2, i2] / (max(d1, d2) * 6))
+    if max(d1,d2) == 0:
+        return 0
 
-    print(truc)
+    p += np.sum(ptable[d1,d2*6:])
+
+    p -= np.sum(ptable[d2,d1*6:])
 
     return p if abs(p) > 0.01 else 0
 
