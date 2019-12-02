@@ -30,8 +30,8 @@ def p_table(D):
     for d in range(1, D + 1):
         for k in range(1, 6 * D + 1):
             table[d, k] = p(d, k)
-    np.savetxt('test.out', table, delimiter=',')
     return table
+
 
 
 def max_esp(D):
@@ -116,7 +116,7 @@ def eg(D, M, i, j, j1):
     return egPaul(i, j, j1), Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2
 
 
-Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2 = eg(2, 10, 0, 0, True)
+#Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2 = eg(2, 10, 0, 0, True)
 
 
 

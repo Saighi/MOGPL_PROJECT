@@ -1,4 +1,5 @@
 from probability import *
+import pandas as pd
 
 def EGsimuL(d1, d2):
     p = 0
@@ -30,9 +31,9 @@ def EGmatL(D):
 
 #Matrice_Louis= EGmatL(3)
 
-def EGsimuP(d1, d2 , D):
-    p_table_j1 = p_table(D)[d1]
-    p_table_j2 = p_table(D)[d2]
+def EGsimuP(d1, d2 , pt):
+    p_table_j1 = pt[d1]
+    p_table_j2 = pt[d2]
     eg_j1=0
     for i in range(1, len(p_table_j1)):
         eg2=0
@@ -49,11 +50,28 @@ def EGsimuP(d1, d2 , D):
 
 def EGmatP(D):
     mat = np.zeros((D + 1, D + 1))
+    pt = p_table(D)
 
     for d1 in range(D + 1):
         for d2 in range(D + 1):
-            mat[d1, d2] = EGsimuP(d1, d2, D)
+            mat[d1, d2] = EGsimuP(d1, d2, pt)
 
-    return mat
+    return mat[1:,1:]
 
-matrice_Paul = EGmatP(3)
+matrice_Paul = EGmatP(10)
+
+
+
+"""def matrice_des_gains(D):
+    mat_gain=np.zeros(((6*D)+1,(6*D)+1))
+    for i in range(1,(6*D)+1):
+        for j in range(1, (6 * D)+1):
+            if i>j:
+                mat_gain[i, j]=1
+            if i==j:
+                mat_gain[i, j]=0
+            if i<j:
+                mat_gain[i, j]=-1
+    return mat_gain[1:,1:]
+
+mat_gain = matrice_des_gains(3)"""
