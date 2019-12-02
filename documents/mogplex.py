@@ -6,7 +6,6 @@
 from gurobipy import *
 
 
-
 nbcont=4 
 nbvar=2
 

@@ -119,34 +119,4 @@ def eg(D, M, i, j, j1):
 Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2 = eg(2, 10, 0, 0, True)
 
 
-# Partie simultanée
 
-def EGsimu(d1, d2):
-    p = 0
-    truc = 0
-
-    ptable = p_table(max(d1, d2))
-
-    for i1 in range(1, ptable.shape[1]):
-        for i2 in range(1, ptable.shape[1]):
-            truc += (ptable[d2, i2] / (max(d1, d2) * 6))
-            if i2 < i1 and d1 != 0:
-                p += (ptable[d1, i1] / (max(d1, d2) * 6))
-            elif i2 > i1 and d2 != 0:
-                p -= (ptable[d2, i2] / (max(d1, d2) * 6))
-
-    print(truc)
-
-    return p if abs(p) > 0.01 else 0
-
-
-def EGmat(D):
-    mat = np.zeros((D + 1, D + 1))
-
-    for d1 in range(D + 1):
-        for d2 in range(D + 1):
-            mat[d1, d2] = EGsimu(d1, d2)
-
-    return mat
-
-# print(EGmat(3))
