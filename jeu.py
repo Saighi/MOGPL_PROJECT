@@ -4,6 +4,7 @@ import numpy as np
 
 import probability as pb
 
+import pandas as pd
 
 def chooseStrat():
     strat = {"aveugle": pb.max_esp}
@@ -50,14 +51,22 @@ def metaloopSeq(nb_parties, player1, player2, M, D):
 
     if player1 == choose_optimale or player2 == choose_optimale:
 
-        if os.path.isfile("tables_tpt/which_play_p1_" + str(D) + "_" + str(M) + ".npy") and os.path.isfile(
-                "tables_tpt/which_play_p2_" + str(D) + "_" + str(M) + ".npy"):
-            Eg_table_which_play_p1 = np.load("tables_tpt/which_play_p1_" + str(D) + "_" + str(M) + ".npy")
-            Eg_table_which_play_p2 = np.load("tables_tpt/which_play_p2_" + str(D) + "_" + str(M) + ".npy")
+        if os.path.isfile("tables_tpt/npy/which_play_p1_" + str(D) + "_" + str(M) + ".npy") and os.path.isfile(
+                "tables_tpt/npy/which_play_p2_" + str(D) + "_" + str(M) + ".npy"):
+            Eg_table_which_play_p1 = np.load("tables_tpt/npy/which_play_p1_" + str(D) + "_" + str(M) + ".npy")
+            Eg_table_which_play_p2 = np.load("tables_tpt/npy/which_play_p2_" + str(D) + "_" + str(M) + ".npy")
+
         else:
             _, _, _, Eg_table_which_play_p1, Eg_table_which_play_p2 = pb.eg(D, M, 0, 0, True)
-            np.save("tables_tpt/which_play_p1_" + str(D) + "_" + str(M), Eg_table_which_play_p1)
-            np.save("tables_tpt/which_play_p2_" + str(D) + "_" + str(M), Eg_table_which_play_p2)
+            np.save("tables_tpt/npy/which_play_p1_" + str(D) + "_" + str(M), Eg_table_which_play_p1)
+            np.save("tables_tpt/npy/which_play_p2_" + str(D) + "_" + str(M), Eg_table_which_play_p2)
+            df = pd.DataFrame(Eg_table_which_play_p1)
+            f = open("tables_tpt/txt/which_play_p1_" + str(D) + "_" + str(M)+".html", "w")
+            f.write(df.to_html())
+            df = pd.DataFrame(Eg_table_which_play_p2)
+            f = open("tables_tpt/txt/which_play_p2_" + str(D) + "_" + str(M)+".html", "w")
+            f.write(df.to_html())
+
 
     wins = 0
     looses = 0
