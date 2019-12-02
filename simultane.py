@@ -58,7 +58,7 @@ def EGmatP(D):
 
     return mat[1:,1:]
 
-matrice_Paul = EGmatP(10)
+#matrice_Paul = EGmatP(10)
 
 
 
