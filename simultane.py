@@ -1,4 +1,4 @@
-gifrom probability import *
+from probability import *
 import pandas as pd
 
 def EGsimuL(d1, d2,ptable):
@@ -56,11 +56,11 @@ def EGmatP(D):
     return mat[1:, 1:]
 
 #matrice_Paul = EGmatP(3)
-
+"""
 print(EGmatL(3))
 print(EGmatP(3))
 
-"""def matrice_des_gains(D):
+def matrice_des_gains(D):
     mat_gain=np.zeros(((6*D)+1,(6*D)+1))
     for i in range(1,(6*D)+1):
         for j in range(1, (6 * D)+1):
