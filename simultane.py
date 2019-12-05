@@ -1,31 +1,29 @@
 from probability import *
 import pandas as pd
 
-def EGsimuL(d1, d2):
+def EGsimuL(d1, d2,ptable):
     p = 0
-
-    ptable = p_table(max(d1,d2))
 
     if max(d1,d2) == 0:
         return 0
 
-    p += np.sum(ptable[d1,d2*6:])
+    p += np.sum(ptable[d1, d2*6:])
 
-    p -= np.sum(ptable[d2,d1*6:])
+    p -= np.sum(ptable[d2, d1*6:])
 
     return p if abs(p) > 0.01 else 0
 
 
 def EGmatL(D):
     mat = np.zeros((D + 1, D + 1))
-
+    ptable = p_table(D)
     for d1 in range(D + 1):
         for d2 in range(D + 1):
-            mat[d1, d2] = EGsimuL(d1, d2)
+            mat[d1, d2] = EGsimuL(d1, d2,ptable)
 
-    return mat
+    return mat[1:,1:]
 
-#Matrice_Louis= EGmatL(3)
+#Matrice_Louis= EGmatL(10)
 
 def EGsimuP(d1, d2 , pt):
     p_table_j1 = pt[d1]
@@ -52,9 +50,9 @@ def EGmatP(D):
         for d2 in range(D + 1):
             mat[d1, d2] = EGsimuP(d1, d2, pt)
 
-    return mat[1:,1:]
+    return mat[1:, 1:]
 
-#matrice_Paul = EGmatP(10)
+#matrice_Paul = EGmatP(3)
 
 
 
