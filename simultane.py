@@ -1,4 +1,4 @@
-from probability import *
+gifrom probability import *
 import pandas as pd
 
 def EGsimuL(d1, d2,ptable):
@@ -7,9 +7,13 @@ def EGsimuL(d1, d2,ptable):
     if max(d1,d2) == 0:
         return 0
 
-    p += np.sum(ptable[d1, d2*6:])
+    h,w = ptable.shape
 
-    p -= np.sum(ptable[d2, d1*6:])
+    for i in range(1,w):
+
+        p += ptable[d1,i]*np.sum(ptable[d2,:i])
+
+        p -= ptable[d1,i]*np.sum(ptable[d2,i+1:])
 
     return p if abs(p) > 0.01 else 0
 
@@ -41,7 +45,6 @@ def EGsimuP(d1, d2 , pt):
 
     return eg_j1
 
-
 def EGmatP(D):
     mat = np.zeros((D + 1, D + 1))
     pt = p_table(D)
@@ -54,7 +57,8 @@ def EGmatP(D):
 
 #matrice_Paul = EGmatP(3)
 
-
+print(EGmatL(3))
+print(EGmatP(3))
 
 """def matrice_des_gains(D):
     mat_gain=np.zeros(((6*D)+1,(6*D)+1))
