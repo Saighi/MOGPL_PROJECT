@@ -116,7 +116,7 @@ def eg(D, M, i, j, j1):
     return egPaul(i, j, j1), Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2
 
 
-Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2 = eg(2, 10, 0, 0, True)
+#Eij, Eg_table_j1, Eg_table_j2, Eg_table_which_play_j1, Eg_table_which_play_j2 = eg(2, 10, 0, 0, True)
 #p=p_table(3)
 
 
