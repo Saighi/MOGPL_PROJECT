@@ -121,7 +121,7 @@ def strat_opt_simu_mat(matrice_de_gain):
     for j in colonnes:
         strat_vec[j] = x[j].x
 
-    return strat_vec
+    return strat_vec, val_max.x
 
 # opt = EGmatP(2)
-#strat_vec=strat_opt_simu(2)
+strat_vec=strat_opt_simu(7)
