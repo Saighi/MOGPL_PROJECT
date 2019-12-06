@@ -66,3 +66,4 @@ def eg_simu_meta(i, j, D, N):
 
 
 eg_fac, Eg_table_j1, Eg_table_which_play_j1 = eg_simu_meta(0, 0, 10, 20)
+np.save("tables_simu/vec_D10_M20",Eg_table_j1)
