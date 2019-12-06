@@ -1,7 +1,7 @@
 from probability import *
 from gurobi_optimisation import *
 
-
+""" Q17 """
 def eg_d(i, j, table_d1, table_d2, Eg_table_j1_k_l):
     sum_1 = 0
     for k in range(1, len(table_d1)):
@@ -21,7 +21,7 @@ def eg_d_table(i, j, table_D, Eg_table_j1_k_l):
 
     return table_eg_d
 
-
+""" Q18 """
 def eg_simu_meta(i, j, D, N):
     table_D = p_table(D)
     Eg_table_j1 = np.full((N, N), 1000.)
