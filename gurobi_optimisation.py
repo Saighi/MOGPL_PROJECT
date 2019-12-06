@@ -7,7 +7,7 @@ from simultane import *
 
 
 def strat_opt_simu(D):
-    matrice_de_gain = EGmatP(D)
+    matrice_de_gain = EGmat(D)
     nbcont = D + 1
     nbvar = D
 
