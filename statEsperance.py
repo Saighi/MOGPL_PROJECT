@@ -77,9 +77,9 @@ def gameResN_simu(V1,V2,Dmin,Dmax,nb_parties):
 
     a.get_figure().savefig("img/aveugle_optimale_simu.png")
 
-
+"""
 V1 = strat_opt_simu(D)
 V2 = np.zeros(D)
 V2[6]=1
-
+"""
 #gameResN_simu(V1,V2, 1, 15, 100000)
