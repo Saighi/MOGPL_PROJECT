@@ -108,3 +108,27 @@ def main_for_meta_loopSeq(player1, player2, M, D, Eg_table_which_play_p1,
             return -1
 
 # start_game(100, 10)
+
+def simulation_simul(nb_parties, D, V1, V2):
+    win = 0
+    loose = 0
+    null = 0
+    dice_lance = np.zeros(D)
+    dice_lance2 = np.zeros(D)
+    for i in range(nb_parties):
+        Vc1 = np.cumsum(V1)
+        d1 = np.where(Vc1 > np.random.rand(1)[0])[0][0] + 1
+
+        Vc2 = np.cumsum(V2)
+        d2 = np.where(Vc2 > np.random.rand(1)[0])[0][0] + 1
+
+        lance_d1 = dice(d1)
+        lance_d2 = dice(d2)
+
+        if lance_d1 > lance_d2:
+            win += 1
+        if lance_d1 == lance_d2:
+            null += 1
+        if lance_d1 < lance_d2:
+            loose += 1
+    return win, loose, null

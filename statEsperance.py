@@ -1,3 +1,4 @@
+from gurobi_optimisation import strat_opt_simu
 from jeu import *
 import numpy as np
 import pandas as pd
@@ -43,3 +44,42 @@ def gameResN(strat1,strat2,Nmin,Nmax,D):
     a.get_figure().savefig("img/aveugle_optimale.png")
 
 gameResN(strat["aveugle"],strat["optimale"],10,100,10)
+
+def gameResN_simu(V1,V2,Dmin,Dmax,nb_parties):
+
+    resultats = {}
+    resultats["D"] = []
+    resultats["1"] = []
+    resultats["2"] = []
+
+    print("start")
+
+    for D in range(Dmin, Dmax, 1):
+        print(D)
+        result1 = simulation_simul(nb_parties, D, V1, V2)
+        result2 = simulation_simul(nb_parties, D, V2, V1)
+        resultats["D"].append(D)
+        resultats["1"].append((result1[0] / nb_parties) - (result1[1] / nb_parties))
+        resultats["2"].append((result2[0] / nb_parties) - (result2[1] / nb_parties))
+
+    r=pd.DataFrame()
+    r['D']=resultats['D']
+    r["1"]=resultats["1"]
+    r["2"]=resultats["2"]
+
+    r = pd.melt(r, id_vars=['D'], value_vars=['1','2'],
+          var_name='groupe', value_name='Esperance')
+
+    a = sns.lineplot(x=r["D"],y=r["Esperance"],
+                 palette=sns.color_palette("pastel", 2))
+
+    plt.show()
+
+    a.get_figure().savefig("img/aveugle_optimale_simu.png")
+
+
+V1 = strat_opt_simu(D)
+V2 = np.zeros(D)
+V2[6]=1
+
+#gameResN_simu(V1,V2, 1, 15, 100000)
