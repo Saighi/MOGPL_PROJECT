@@ -28,7 +28,7 @@ def strat_opt_simu(D):
     for i in colonnes:
         x.append(m.addVar(vtype=GRB.CONTINUOUS, lb=0, name="x%d" % (i + 1)))
 
-    val_max = m.addVar(vtype=GRB.CONTINUOUS, lb=0, name="val_min")
+    val_max = m.addVar(vtype=GRB.CONTINUOUS,lb=-10000000000000000000000, name="val_max")
 
     # maj du modele pour integrer les nouvelles variables
     m.update()
@@ -87,7 +87,7 @@ def strat_opt_simu_mat(matrice_de_gain):
     for i in colonnes:
         x.append(m.addVar(vtype=GRB.CONTINUOUS, lb=0, name="x%d" % (i + 1)))
 
-    val_max = m.addVar(vtype=GRB.CONTINUOUS, lb=0, name="val_min")
+    val_max = m.addVar(vtype=GRB.CONTINUOUS,lb=-10000000000000000000000, name="val_max")
 
     # maj du modele pour integrer les nouvelles variables
     m.update()
@@ -124,4 +124,4 @@ def strat_opt_simu_mat(matrice_de_gain):
     return strat_vec
 
 # opt = EGmatP(2)
-# strat_vec=strat_opt_simu(10)
+#strat_vec=strat_opt_simu(2)

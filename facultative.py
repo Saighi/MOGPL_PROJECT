@@ -29,8 +29,6 @@ def eg_simu_meta(i, j, D, N):
     # Eg_table_which_play_j1 = np.full((N, N), 1000.)
     def eg_simu(i, j):
 
-        if i == j and i!= 0:
-            return 0
 
         if i >= N and j >= N:
             return 0
@@ -38,6 +36,10 @@ def eg_simu_meta(i, j, D, N):
             return 1
         if j >= N:
             return -1
+
+        if i == j and i != 0:
+            Eg_table_j1[i,j]=0
+            return 0
 
         Eg_table_j1_k_l = np.zeros((N+(6*D), N+(6*D)))
 
@@ -49,7 +51,6 @@ def eg_simu_meta(i, j, D, N):
                     Eg_table_j1_k_l[x, y] = eg_simu(x, y)
 
         eg_d_t = eg_d_table(i, j, table_D, Eg_table_j1_k_l)
-        print(eg_d_t)
         strat_opti = strat_opt_simu_mat(eg_d_t)
 
         eg = 0
@@ -58,6 +59,7 @@ def eg_simu_meta(i, j, D, N):
             for y in range(len(strat_opti)):
                 sum += strat_opti[y] * eg_d_t[x, y]
             eg += strat_opti[x] * sum
+
         if Eg_table_j1[i, j] == 1000.:
             Eg_table_j1[i, j] = eg
         return eg
@@ -65,4 +67,4 @@ def eg_simu_meta(i, j, D, N):
     return eg_simu(i, j), Eg_table_j1
 
 
-eg_fac = eg_simu_meta(0, 0, 2, 10)
+eg_fac,Eg_table_j1 = eg_simu_meta(0, 0, 2, 10)
