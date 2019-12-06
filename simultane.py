@@ -1,6 +1,8 @@
 from probability import *
 import pandas as pd
 
+"""Q10"""
+
 def EGsimu(d1, d2,ptable):
     p = 0
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-
+"""Q1"""
 def q(d, k):
     if k < 2 * d or k > 6 * d:
         return 0
@@ -33,7 +33,7 @@ def p_table(D):
     return table
 
 
-
+"""Q2"""
 def max_esp(D):
     val_max_d = 0
     for d in range(1, D + 1):
@@ -54,6 +54,7 @@ f.write(df.to_html())
 def esp(a):
     return 4 * a * (5 / 6) ** a + 1 - (5 / 6) ** a
 
+"""Q4/Q5"""
 
 def eg(D, M, i, j, j1):
     proba_table = p_table(D)[1:, :]

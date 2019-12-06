@@ -6,6 +6,8 @@ import probability as pb
 
 import pandas as pd
 
+"""Q7"""
+
 def chooseStrat():
     strat = {"aveugle": pb.max_esp}
     n = 0
