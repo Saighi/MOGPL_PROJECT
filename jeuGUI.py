@@ -27,6 +27,24 @@ def humainStrat(D):
     window.close()
     return values["d"]
 
+def choose_aveugle(D,truc,i,j):
+    return pb.max_esp(D)
+
+def choose_optimale(D,Eg_table_which_play, i, j):
+    return int(Eg_table_which_play[i, j])
+
+
+def choose_aleatoire(D,truc,i,j):
+    return np.random.randint(1, D + 1)
+
+def dice(d):
+    r = np.random.randint(1, 7, size=(d,))
+
+    if 1 in r:
+        return 1
+    else:
+        return np.sum(r)
+
 def load_table(M,D):
 
     global Eg_table_which_play_p1
@@ -47,25 +65,6 @@ def load_table(M,D):
         df = pd.DataFrame(Eg_table_which_play_p2)
         f = open("tables_tpt/txt/which_play_p2_" + str(D) + "_" + str(M)+".html", "w")
         f.write(df.to_html())
-
-def choose_aveugle(D,truc,i,j):
-    return pb.max_esp(D)
-
-def choose_optimale(D,Eg_table_which_play, i, j):
-    return int(Eg_table_which_play[i, j])
-
-
-def choose_aleatoire(D,truc,i,j):
-    return np.random.randint(1, D + 1)
-
-def dice(d):
-    r = np.random.randint(1, 7, size=(d,))
-
-    if 1 in r:
-        return 1
-    else:
-        return np.sum(r)
-
 
 def mainloopSeq(player1, player2, M, D):
     p1 = 0
