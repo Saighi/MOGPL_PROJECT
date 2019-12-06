@@ -5,7 +5,7 @@ from gurobipy import *
 # Copyright 2013, Gurobi Optimization, Inc.
 from simultane import *
 
-
+"""Q13"""
 def strat_opt_simu(D):
     matrice_de_gain = EGmat(D)
     nbcont = D + 1

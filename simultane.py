@@ -1,6 +1,8 @@
 from probability import *
 import pandas as pd
 
+"""Q10"""
+
 def EGsimu(d1, d2,ptable):
     p = 0
 
@@ -23,6 +25,6 @@ def EGmat(D):
     ptable = p_table(D)
     for d1 in range(D + 1):
         for d2 in range(D + 1):
-            mat[d1, d2] = EGsimuL(d1, d2,ptable)
+            mat[d1, d2] = EGsimu(d1, d2,ptable)
 
     return mat[1:,1:]
